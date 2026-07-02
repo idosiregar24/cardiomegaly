@@ -8,6 +8,7 @@
 // URL backend Hugging Face Spaces (production)
 export const BASE_URL = 'https://idosiregar2-cardiomegaly-backend.hf.space';
 
+
 /**
  * Mengirim gambar rontgen thorax dan ID pasien ke backend Flask (ngrok) untuk dianalisis.
  * @param {File} imageFile - File gambar rontgen (.png / .jpg)

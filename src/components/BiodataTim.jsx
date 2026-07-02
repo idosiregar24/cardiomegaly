@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import idoAvatar from '../assets/Ido Refael Siregar.jpeg';
+import wilhelmAvatar from '../assets/Wilhelm.png';
 import { useTranslation } from '../lib/TranslationContext';
 
 const glass = {
@@ -16,18 +17,18 @@ export default function BiodataTim() {
       name: 'Ido Refael Siregar',
       nim: '2457301067',
       role: 'Ketua Kelompok / Full-Stack Developer',
-      desc: 'Mahasiswa Sistem Informasi di Politeknik Caltex Riau, spesialisasi dalam Full-Stack Development & AI. Berhasil menjadi Finalis GEMASTIK 2025.',
+      desc: 'Mahasiswa Sistem Informasi di Politeknik Caltex Riau, spesialisasi dalam Full-Stack Development.',
       skills: ['React', 'Tailwind CSS', 'Laravel', 'Python Data Mining'],
       avatar: idoAvatar,
       initials: 'IS',
     },
     {
       name: 'Wilhelm Samto Tamba',
-      nim: '2457301068',
-      role: 'Co-Developer / Data Analyst',
+      nim: '2457301152',
+      role: 'Co-Developer',
       desc: 'Mahasiswa Sistem Informasi di Politeknik Caltex Riau, berkontribusi dalam analisis data hasil eksplorasi visualisasi citra thorax dan pendukung evaluasi performa model CNN.',
       skills: ['Data Analytics', 'Python Data Mining', 'SQL', 'Statistical Modeling'],
-      avatar: idoAvatar,
+      avatar: wilhelmAvatar,
       initials: 'RK',
     },
   ];

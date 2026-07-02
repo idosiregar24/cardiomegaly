@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import KarakteristikData from './KarakteristikData';
-import FlowchartSistem from './FlowchartSistem';
+import SistemArsitektur from './SistemArsitektur';
 import BiodataTim from './BiodataTim';
 import logoRsj from '../assets/logo-vertikal-rsj.png';
 import { useTranslation } from '../lib/TranslationContext';
@@ -529,7 +529,7 @@ export default function PublicPortal({ onEnterAdmin }) {
             />
           </Reveal>
           <Reveal delay={100}>
-            <FlowchartSistem />
+            <SistemArsitektur />
           </Reveal>
         </div>
       </section>

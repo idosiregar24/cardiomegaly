@@ -121,8 +121,8 @@ const id = {
   pp_char_subtitle: 'Dua kelas diagnosis berbasis nilai Cardiothoracic Ratio (CTR) yang ditetapkan oleh tim medis RSJ Tampan Riau.',
 
   pp_flow_label:    'Arsitektur Sistem',
-  pp_flow_title:    'Alur Sistem Analisis Digital',
-  pp_flow_subtitle: 'Pipeline lengkap dari unggah citra rontgen, preprocessing, komputasi CNN, hingga output diagnosis dan penyimpanan data.',
+  pp_flow_title:    'Metodologi & Arsitektur Sistem AI',
+  pp_flow_subtitle: 'Detail teknis pipeline: persiapan data, perancangan DenseNet121, pengujian model, hingga integrasi backend Flask & frontend React.',
 
   pp_team_label:    'Tim Peneliti',
   pp_team_title:    'Kelompok Kardiomegali',

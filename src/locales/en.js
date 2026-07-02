@@ -121,8 +121,8 @@ const en = {
   pp_char_subtitle: 'Two diagnosis classes based on Cardiothoracic Ratio (CTR) values established by the RSJ Tampan Riau medical team.',
 
   pp_flow_label:    'System Architecture',
-  pp_flow_title:    'Digital Analysis System Flow',
-  pp_flow_subtitle: 'Complete pipeline from X-Ray image upload, preprocessing, CNN computation, to diagnosis output and data storage.',
+  pp_flow_title:    'AI System Methodology & Architecture',
+  pp_flow_subtitle: 'Technical pipeline details: data preparation, DenseNet121 design, model testing, through to Flask backend & React frontend integration.',
 
   pp_team_label:    'Research Team',
   pp_team_title:    'Cardiomegaly Group',

@@ -19,9 +19,10 @@ app = Flask(__name__)
 # Set CORS_ORIGINS di HF Spaces Secrets jika ingin membatasi domain
 _cors_origins = os.environ.get(
     "CORS_ORIGINS",
-    "https://cardiomegaly-inky.vercel.app,http://localhost:5173,http://localhost:3000"
+    "https://cardiomegaly.vercel.app,https://cardiomegaly-inky.vercel.app,http://localhost:5173,http://localhost:3000"
 ).split(",")
 CORS(app, origins=_cors_origins, supports_credentials=False)
+
 
 
 # ==========================================
