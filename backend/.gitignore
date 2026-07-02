@@ -1,0 +1,13 @@
+﻿# Exclude model lama yang tidak digunakan
+cnn_kardiomegali_best.h5
+cnn_kardiomegali_final_3kelas_new.h5
+
+# Exclude file development
+venv/
+__pycache__/
+*.pyc
+*.pyo
+static/temp/
+
+# Exclude testing files
+model_kardiomegaly_testing.py
