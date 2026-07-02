@@ -1,4 +1,12 @@
-﻿import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
+import foto1 from '../assets/Foto-Dokumentasi/Foto 1 (1).jpeg';
+import foto2 from '../assets/Foto-Dokumentasi/Foto 1 (2).jpeg';
+import foto3 from '../assets/Foto-Dokumentasi/Foto 1 (3).jpeg';
+import foto4 from '../assets/Foto-Dokumentasi/Foto 1 (4).jpeg';
+import ds1 from '../assets/Dataset/Ps1.JPG';
+import ds2 from '../assets/Dataset/Ps2.JPG';
+import ds3 from '../assets/Dataset/Ps3.JPG';
 
 /* ─── Color helpers ─── */
 const C = {
@@ -10,6 +18,76 @@ const C = {
   teal:   { main: '#0D9488', light: '#F0FDFA', border: '#99F6E4' },
 };
 
+/* ─── Lightbox Modal Component (Portal-based) ─── */
+function Lightbox({ src, alt, onClose }) {
+  useEffect(() => {
+    const originalStyle = window.getComputedStyle(document.body).overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalStyle;
+    };
+  }, []);
+
+  return createPortal(
+    <div
+      onClick={onClose}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 99999,
+        background: 'rgba(0,0,0,0.92)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: 'zoom-out',
+        padding: 20,
+      }}
+    >
+      <div style={{ position: 'relative', maxWidth: '90vw', maxHeight: '90vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <img
+          src={src}
+          alt={alt || "Citra Detail"}
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            maxWidth: '100%',
+            maxHeight: '85vh',
+            borderRadius: 12,
+            objectFit: 'contain',
+            boxShadow: '0 20px 60px rgba(0,0,0,0.75)',
+            display: 'block',
+            border: '2px solid rgba(255,255,255,0.1)',
+          }}
+        />
+        <button
+          onClick={onClose}
+          style={{
+            position: 'absolute',
+            top: -45,
+            right: 0,
+            background: 'rgba(255,255,255,0.15)',
+            border: '1.5px solid rgba(255,255,255,0.4)',
+            borderRadius: '50%',
+            width: 36,
+            height: 36,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            color: '#fff',
+            transition: 'background 0.2s',
+          }}
+          onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.35)'}
+          onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.15)'}
+        >
+          <span className="material-symbols-outlined" style={{ fontSize: 20 }}>close</span>
+        </button>
+      </div>
+    </div>,
+    document.body
+  );
+}
+
+/* ─── Pipeline Step ─── */
 function PipelineStep({ no, icon, title, desc, color = 'blue', last = false }) {
   const c = C[color] ?? C.blue;
   return (
@@ -36,6 +114,7 @@ function PipelineStep({ no, icon, title, desc, color = 'blue', last = false }) {
   );
 }
 
+/* ─── Section Card ─── */
 function SectionCard({ icon, iconColor, iconBg, title, children }) {
   return (
     <div style={{
@@ -47,10 +126,7 @@ function SectionCard({ icon, iconColor, iconBg, title, children }) {
         padding: '16px 22px', borderBottom: '1px solid #F1F3F4',
         background: '#FAFAFA',
       }}>
-        <div style={{
-          width: 32, height: 32, borderRadius: 8, background: iconBg,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-        }}>
+        <div style={{ width: 32, height: 32, borderRadius: 8, background: iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <span className="material-symbols-outlined" style={{ fontSize: 17, color: iconColor, fontVariationSettings: "'FILL' 1" }}>{icon}</span>
         </div>
         <span style={{ fontSize: 14, fontWeight: 700, color: '#202124', fontFamily: "'Hanken Grotesk', system-ui" }}>{title}</span>
@@ -60,101 +136,461 @@ function SectionCard({ icon, iconColor, iconBg, title, children }) {
   );
 }
 
-function FlowchartUpload() {
-  const [imgSrc, setImgSrc] = useState(null);
-  const [dragging, setDragging] = useState(false);
-  const inputRef = useRef(null);
-
-  const handleFile = useCallback((file) => {
-    if (!file || !file.type.startsWith('image/')) return;
-    const url = URL.createObjectURL(file);
-    setImgSrc(prev => { if (prev) URL.revokeObjectURL(prev); return url; });
-  }, []);
-
-  const onDrop = useCallback((e) => {
-    e.preventDefault();
-    setDragging(false);
-    handleFile(e.dataTransfer.files?.[0]);
-  }, [handleFile]);
+/* ─── Vertical Flowchart ─── */
+function FlowchartMetodologi() {
+  const steps = [
+    {
+      id: 'start', type: 'terminal', label: 'Mulai',
+      color: '#1E8E3E', bg: '#E6F4EA', border: '#81C995',
+      icon: 'play_circle',
+    },
+    {
+      id: 'collect', type: 'process', label: 'Pengumpulan Data',
+      color: '#1A73E8', bg: '#E8F0FE', border: '#AECBFA',
+      icon: 'database',
+      detail: 'Pengambilan citra thorax dari RSJ Tampan Riau & dataset eksternal (Kaggle)',
+    },
+    {
+      id: 'preprocess', type: 'process', label: 'Preprocessing Data',
+      color: '#0D9488', bg: '#F0FDFA', border: '#99F6E4',
+      icon: 'tune',
+      subs: ['Resize citra ke 256×256 piksel', 'Standardisasi kontras (CLAHE)', 'Konversi Grayscale ke RGB'],
+    },
+    {
+      id: 'imbalance', type: 'process', label: 'Penanganan Imbalanced Data',
+      color: '#B45309', bg: '#FEF3C7', border: '#FCD34D',
+      icon: 'balance',
+      detail: 'Double Protection: Class Weighting (loss function) & Oversampling kelas Kardiomegali',
+    },
+    {
+      id: 'train', type: 'process', label: 'Pelatihan Model (Two-Phase)',
+      color: '#7C3AED', bg: '#F5F3FF', border: '#C4B5FD',
+      icon: 'model_training',
+      subs: [
+        'Fase A — Warm-Up: hanya lapisan Dense/Head (15 epoch, LR 1e-3)',
+        'Fase B — Full Fine-Tuning: seluruh lapisan DenseNet121 (50 epoch, LR 1e-5)',
+      ],
+    },
+    {
+      id: 'eval', type: 'process', label: 'Evaluasi Model',
+      color: '#DC2626', bg: '#FEF2F2', border: '#FECACA',
+      icon: 'analytics',
+      detail: 'Pengujian data validasi: Accuracy, Precision, Recall, F1-Score, ROC-AUC & Confusion Matrix',
+    },
+    {
+      id: 'integrate', type: 'process', label: 'Integrasi Sistem',
+      color: '#1A73E8', bg: '#E8F0FE', border: '#AECBFA',
+      icon: 'integration_instructions',
+      detail: 'Pengemasan model ke dalam Backend Flask (API) & Frontend Web (React)',
+    },
+    {
+      id: 'end', type: 'terminal', label: 'Selesai',
+      color: '#1E8E3E', bg: '#E6F4EA', border: '#81C995',
+      icon: 'check_circle',
+    },
+  ];
 
   return (
     <div style={{
       background: '#FFFFFF', border: '1px solid #DADCE0', borderRadius: 16,
       overflow: 'hidden', boxShadow: '0 1px 4px rgba(60,64,67,0.07)',
     }}>
+      {/* Header */}
       <div style={{
         display: 'flex', alignItems: 'center', gap: 10,
         padding: '16px 22px', borderBottom: '1px solid #F1F3F4', background: '#FAFAFA',
       }}>
-        <div style={{ width: 32, height: 32, borderRadius: 8, background: '#F5F3FF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <span className="material-symbols-outlined" style={{ fontSize: 17, color: '#7C3AED', fontVariationSettings: "'FILL' 1" }}>schema</span>
+        <div style={{ width: 32, height: 32, borderRadius: 8, background: '#E8F0FE', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <span className="material-symbols-outlined" style={{ fontSize: 17, color: '#1A73E8', fontVariationSettings: "'FILL' 1" }}>account_tree</span>
         </div>
-        <span style={{ fontSize: 14, fontWeight: 700, color: '#202124', fontFamily: "'Hanken Grotesk', system-ui" }}>
-          Diagram Alur Sistem (Flowchart)
-        </span>
-        <span style={{
-          marginLeft: 'auto', fontSize: 10, fontWeight: 700, color: '#7C3AED',
-          background: '#F5F3FF', border: '1px solid #C4B5FD',
-          borderRadius: 9999, padding: '2px 8px', textTransform: 'uppercase', letterSpacing: '0.07em',
-        }}>PNG / JPG</span>
+        <div>
+          <span style={{ fontSize: 14, fontWeight: 700, color: '#202124', fontFamily: "'Hanken Grotesk', system-ui", display: 'block' }}>
+            Flowchart Metodologi Pengembangan
+          </span>
+          <span style={{ fontSize: 11, color: '#80868B' }}>Alur teknis pembangunan model dari awal hingga siap digunakan</span>
+        </div>
       </div>
-      <div style={{ padding: '20px 22px' }}>
-        {imgSrc ? (
-          <div style={{ position: 'relative', borderRadius: 12, overflow: 'hidden', border: '1px solid #C4B5FD' }}>
-            <img src={imgSrc} alt="Flowchart Sistem Kardiomegali"
-              style={{ width: '100%', height: 'auto', display: 'block', maxHeight: 900, objectFit: 'contain', background: '#F5F3FF' }} />
-            <button
-              onClick={() => { URL.revokeObjectURL(imgSrc); setImgSrc(null); }}
-              style={{
-                position: 'absolute', top: 10, right: 10,
-                background: 'rgba(255,255,255,0.96)', border: '1px solid #DADCE0',
-                borderRadius: 7, padding: '5px 10px', cursor: 'pointer',
-                fontSize: 11, fontWeight: 600, color: '#5F6368',
-                display: 'flex', alignItems: 'center', gap: 4,
-              }}>
-              <span className="material-symbols-outlined" style={{ fontSize: 13 }}>close</span>
-              Hapus
-            </button>
-          </div>
-        ) : (
-          <div
-            onDragOver={e => { e.preventDefault(); setDragging(true); }}
-            onDragLeave={() => setDragging(false)}
-            onDrop={onDrop}
-            onClick={() => inputRef.current?.click()}
-            style={{
-              border: `2px dashed ${dragging ? '#7C3AED' : '#C4B5FD'}`,
-              borderRadius: 12, padding: '40px 20px', textAlign: 'center',
-              background: dragging ? '#F5F3FF' : '#FAFAFF',
-              cursor: 'pointer', transition: 'all 0.2s',
-            }}>
+
+      {/* Flowchart body */}
+      <div style={{ padding: '28px 32px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0 }}>
+        {steps.map((step, i) => (
+          <div key={step.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: 560 }}>
+            {/* Node */}
             <div style={{
-              width: 48, height: 48, borderRadius: 12, background: '#F5F3FF',
-              border: '1.5px solid #C4B5FD',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px',
+              width: '100%',
+              border: `1.5px solid ${step.border}`,
+              borderRadius: step.type === 'terminal' ? 9999 : 12,
+              background: step.bg,
+              padding: step.type === 'terminal' ? '10px 24px' : '14px 18px',
+              display: 'flex', flexDirection: 'column', alignItems: step.type === 'terminal' ? 'center' : 'flex-start',
+              position: 'relative',
             }}>
-              <span className="material-symbols-outlined" style={{ fontSize: 24, color: '#7C3AED' }}>upload_file</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, width: '100%', justifyContent: step.type === 'terminal' ? 'center' : 'flex-start' }}>
+                <div style={{
+                  width: 30, height: 30, borderRadius: 8, background: step.color + '20',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: 16, color: step.color, fontVariationSettings: "'FILL' 1" }}>{step.icon}</span>
+                </div>
+                <span style={{
+                  fontSize: step.type === 'terminal' ? 13 : 13.5,
+                  fontWeight: 800, color: step.color,
+                  fontFamily: "'Hanken Grotesk', system-ui",
+                }}>{step.label}</span>
+                {/* Step number badge */}
+                {step.type !== 'terminal' && (
+                  <span style={{
+                    marginLeft: 'auto', fontSize: 9, fontWeight: 800,
+                    color: step.color, background: step.color + '15',
+                    border: `1px solid ${step.border}`,
+                    borderRadius: 9999, padding: '2px 7px',
+                    letterSpacing: '0.06em',
+                  }}>{String(i).padStart(2, '0')}</span>
+                )}
+              </div>
+              {/* Detail text */}
+              {step.detail && (
+                <p style={{ fontSize: 11.5, color: '#5F6368', margin: '8px 0 0 40px', lineHeight: 1.6 }}>{step.detail}</p>
+              )}
+              {/* Sub-steps */}
+              {step.subs && (
+                <ul style={{ margin: '8px 0 0 40px', padding: 0, listStyle: 'none' }}>
+                  {step.subs.map((s, si) => (
+                    <li key={si} style={{ display: 'flex', alignItems: 'flex-start', gap: 6, marginBottom: 4 }}>
+                      <span style={{ width: 5, height: 5, borderRadius: '50%', background: step.color, marginTop: 5, flexShrink: 0 }} />
+                      <span style={{ fontSize: 11.5, color: '#5F6368', lineHeight: 1.6 }}>{s}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
-            <p style={{ fontSize: 14, fontWeight: 700, color: '#202124', margin: '0 0 6px', fontFamily: "'Hanken Grotesk', system-ui" }}>
-              Unggah Flowchart Sistem
-            </p>
-            <p style={{ fontSize: 12, color: '#80868B', margin: '0 0 14px', lineHeight: 1.6 }}>
-              Seret &amp; lepas, atau klik untuk pilih file
-            </p>
-            <span style={{
-              fontSize: 10, fontWeight: 700, color: '#7C3AED',
-              background: '#F5F3FF', border: '1px solid #C4B5FD',
-              borderRadius: 9999, padding: '3px 10px',
-            }}>PNG · JPG · JPEG</span>
-            <input ref={inputRef} type="file" accept="image/png,image/jpeg,image/jpg"
-              onChange={e => handleFile(e.target.files?.[0])} style={{ display: 'none' }} />
+
+            {/* Arrow connector */}
+            {i < steps.length - 1 && (
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '0', padding: '2px 0' }}>
+                <div style={{ width: 2, height: 18, background: 'linear-gradient(to bottom, #DADCE0, #AECBFA)' }} />
+                <svg width="14" height="8" viewBox="0 0 14 8" style={{ display: 'block' }}>
+                  <path d="M7 8 L0 0 L14 0 Z" fill="#AECBFA" />
+                </svg>
+              </div>
+            )}
           </div>
-        )}
+        ))}
       </div>
     </div>
   );
 }
 
+/* ─── Contoh Dataset ─── */
+function ContohDataset() {
+  const [lightbox, setLightbox] = useState(null);
+
+  const samples = [
+    {
+      src: ds1,
+      id: 'Citra Thorax 01',
+      source: 'RSJ Tampan Riau',
+    },
+    {
+      src: ds2,
+      id: 'Citra Thorax 02',
+      source: 'RSJ Tampan Riau',
+    },
+    {
+      src: ds3,
+      id: 'Citra Thorax 03',
+      source: 'RSJ Tampan Riau',
+    },
+  ];
+
+  return (
+    <div style={{
+      background: '#FFFFFF', border: '1px solid #DADCE0', borderRadius: 16,
+      overflow: 'hidden', boxShadow: '0 1px 4px rgba(60,64,67,0.07)',
+    }}>
+      {/* Header */}
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 10,
+        padding: '16px 22px', borderBottom: '1px solid #F1F3F4', background: '#FAFAFA',
+      }}>
+        <div style={{ width: 32, height: 32, borderRadius: 8, background: '#F5F3FF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <span className="material-symbols-outlined" style={{ fontSize: 17, color: '#7C3AED', fontVariationSettings: "'FILL' 1" }}>radiology</span>
+        </div>
+        <div>
+          <span style={{ fontSize: 14, fontWeight: 700, color: '#202124', fontFamily: "'Hanken Grotesk', system-ui", display: 'block' }}>
+            Contoh Citra Dataset
+          </span>
+          <span style={{ fontSize: 11, color: '#80868B' }}>Sampel citra rontgen thorax anonim yang digunakan dalam pelatihan model</span>
+        </div>
+      </div>
+
+      {/* Grid */}
+      <div style={{ padding: '20px 22px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: 20 }}>
+          {samples.map((s, idx) => (
+            <div key={idx} style={{
+              borderRadius: 14,
+              border: '1px solid #DADCE0',
+              overflow: 'hidden',
+              background: '#FFFFFF',
+              boxShadow: '0 2px 8px rgba(60,64,67,0.06)',
+              display: 'flex',
+              flexDirection: 'column',
+              transition: 'transform 0.2s, box-shadow 0.2s',
+            }}
+              onMouseEnter={e => {
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.boxShadow = '0 6px 16px rgba(60,64,67,0.12)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.transform = 'none';
+                e.currentTarget.style.boxShadow = '0 2px 8px rgba(60,64,67,0.06)';
+              }}
+            >
+              {/* DICOM Viewer Box */}
+              <div style={{
+                position: 'relative',
+                aspectRatio: '3/4',
+                cursor: 'zoom-in',
+                overflow: 'hidden',
+                background: '#090A0F', // Dark clinical background
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+                onClick={() => setLightbox(s.src)}
+              >
+                {/* Simulated DICOM Grid Background */}
+                <div style={{
+                  position: 'absolute',
+                  inset: 0,
+                  backgroundImage: 'radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px)',
+                  backgroundSize: '16px 16px',
+                  pointerEvents: 'none',
+                }} />
+
+                {/* Corner Crosshairs */}
+                <div style={{ position: 'absolute', top: 12, left: 12, width: 8, height: 8, borderLeft: '1px solid rgba(255,255,255,0.3)', borderTop: '1px solid rgba(255,255,255,0.3)', pointerEvents: 'none' }} />
+                <div style={{ position: 'absolute', top: 12, right: 12, width: 8, height: 8, borderRight: '1px solid rgba(255,255,255,0.3)', borderTop: '1px solid rgba(255,255,255,0.3)', pointerEvents: 'none' }} />
+                <div style={{ position: 'absolute', bottom: 12, left: 12, width: 8, height: 8, borderLeft: '1px solid rgba(255,255,255,0.3)', borderBottom: '1px solid rgba(255,255,255,0.3)', pointerEvents: 'none' }} />
+                <div style={{ position: 'absolute', bottom: 12, right: 12, width: 8, height: 8, borderRight: '1px solid rgba(255,255,255,0.3)', borderBottom: '1px solid rgba(255,255,255,0.3)', pointerEvents: 'none' }} />
+
+                {/* DICOM Corner Text Overlay (Monospace info) */}
+                <div style={{
+                  position: 'absolute',
+                  top: 10,
+                  left: 12,
+                  fontFamily: 'monospace',
+                  fontSize: 8,
+                  color: 'rgba(255,255,255,0.45)',
+                  lineHeight: 1.3,
+                  pointerEvents: 'none',
+                  textShadow: '1px 1px 2px rgba(0,0,0,0.8)',
+                }}>
+                  {s.id}<br />
+                  F: CXR PA<br />
+                  W/L: 256/128
+                </div>
+
+                <div style={{
+                  position: 'absolute',
+                  top: 10,
+                  right: 12,
+                  fontFamily: 'monospace',
+                  fontSize: 10,
+                  fontWeight: 'bold',
+                  color: 'rgba(255,255,255,0.3)',
+                  pointerEvents: 'none',
+                  textShadow: '1px 1px 2px rgba(0,0,0,0.8)',
+                }}>
+                  R
+                </div>
+
+                {/* Actual X-Ray Image (untruncated contain mode) */}
+                <img
+                  src={s.src}
+                  alt={`Citra rontgen - ${s.id}`}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                    display: 'block',
+                    transition: 'opacity 0.2s',
+                    opacity: 0.9,
+                  }}
+                />
+
+                {/* Medical Graticule lines / Calibration rulers on the right side */}
+                <div style={{
+                  position: 'absolute',
+                  right: 4,
+                  top: '25%',
+                  bottom: '25%',
+                  width: 4,
+                  borderRight: '1px solid rgba(255,255,255,0.25)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  pointerEvents: 'none',
+                }}>
+                  {[...Array(6)].map((_, i) => (
+                    <div key={i} style={{ width: 4, height: 1, background: 'rgba(255,255,255,0.3)' }} />
+                  ))}
+                </div>
+
+                {/* Zoom Icon Overlay (Lower Right) */}
+                <div style={{
+                  position: 'absolute',
+                  bottom: 10,
+                  right: 10,
+                  width: 24,
+                  height: 24,
+                  borderRadius: 6,
+                  background: 'rgba(255,255,255,0.15)',
+                  border: '1px solid rgba(255,255,255,0.25)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backdropFilter: 'blur(4px)',
+                }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: 13, color: '#fff' }}>zoom_in</span>
+                </div>
+              </div>
+
+              {/* Meta Panel (Under the X-Ray) */}
+              <div style={{ padding: '12px 14px', background: '#FAFAFA', borderTop: '1px solid #F1F3F4' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 5 }}>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: '#202124', fontFamily: "'Hanken Grotesk', system-ui" }}>{s.id}</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: 12, color: '#80868B' }}>location_on</span>
+                  <span style={{ fontSize: 11, color: '#80868B', fontWeight: 500 }}>{s.source}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Info bar */}
+        <div style={{ marginTop: 16, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 10 }}>
+          {[
+            { icon: 'straighten', label: 'Resolusi', value: '256 × 256 px', color: '#7C3AED' },
+            { icon: 'call_split', label: 'Pembagian Data', value: '80% Train / 20% Validasi', color: '#1A73E8' },
+            { icon: 'monitor_heart', label: 'Threshold CTR', value: '> 0.50 = Kardiomegali', color: '#DC2626' },
+            { icon: 'layers', label: 'Format', value: 'JPEG / JPG · Grayscale → RGB', color: '#0D9488' },
+          ].map(chip => (
+            <div key={chip.label} style={{ display: 'flex', gap: 8, alignItems: 'center', background: '#F8F9FA', border: '1px solid #DADCE0', borderRadius: 8, padding: '8px 10px' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: 14, color: chip.color, fontVariationSettings: "'FILL' 1" }}>{chip.icon}</span>
+              <div>
+                <p style={{ fontSize: 9.5, fontWeight: 700, color: '#80868B', margin: 0, textTransform: 'uppercase', letterSpacing: '0.07em' }}>{chip.label}</p>
+                <p style={{ fontSize: 11, fontWeight: 600, color: '#202124', margin: 0 }}>{chip.value}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Lightbox */}
+      {lightbox && (
+        <Lightbox src={lightbox} alt="Citra Rontgen Dataset" onClose={() => setLightbox(null)} />
+      )}
+    </div>
+  );
+}
+
+/* ─── Documentation Gallery ─── */
+
+function DocumentasiGaleri() {
+  const [lightbox, setLightbox] = useState(null);
+
+  const photos = [
+    { src: foto1, caption: 'Koordinasi dengan staf RSJ Tampan Riau' },
+    { src: foto2, caption: 'Kunjungan ke lokasi RSJ Tampan Riau' },
+    { src: foto3, caption: 'Diskusi dengan petugas radiologi' },
+    { src: foto4, caption: 'Tim bersama petugas unit radiologi' },
+  ];
+
+  return (
+    <div style={{
+      background: '#FFFFFF', border: '1px solid #DADCE0', borderRadius: 16,
+      overflow: 'hidden', boxShadow: '0 1px 4px rgba(60,64,67,0.07)',
+    }}>
+      {/* Header */}
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 10,
+        padding: '16px 22px', borderBottom: '1px solid #F1F3F4', background: '#FAFAFA',
+      }}>
+        <div style={{ width: 32, height: 32, borderRadius: 8, background: '#FEF3C7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <span className="material-symbols-outlined" style={{ fontSize: 17, color: '#B45309', fontVariationSettings: "'FILL' 1" }}>photo_library</span>
+        </div>
+        <div>
+          <span style={{ fontSize: 14, fontWeight: 700, color: '#202124', fontFamily: "'Hanken Grotesk', system-ui", display: 'block' }}>
+            Dokumentasi Pengumpulan Data
+          </span>
+          <span style={{ fontSize: 11, color: '#80868B' }}>Kunjungan langsung ke RSJ Tampan Riau untuk pengambilan data citra thorax</span>
+        </div>
+        <span style={{
+          marginLeft: 'auto', fontSize: 10, fontWeight: 700, color: '#1E8E3E',
+          background: '#E6F4EA', border: '1px solid #81C995',
+          borderRadius: 9999, padding: '2px 8px', textTransform: 'uppercase', letterSpacing: '0.07em',
+        }}>4 Foto</span>
+      </div>
+
+      {/* Grid */}
+      <div style={{ padding: '20px 22px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 14 }}>
+          {photos.map((photo, idx) => (
+            <div key={idx} style={{ position: 'relative', borderRadius: 12, overflow: 'hidden', border: '1px solid #DADCE0', aspectRatio: '4/3', background: '#F8F9FA', cursor: 'zoom-in' }}
+              onClick={() => setLightbox(photo.src)}
+              className="pp-hover-lift"
+            >
+              <img
+                src={photo.src}
+                alt={photo.caption}
+                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.35s ease' }}
+                onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.04)'}
+                onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+              />
+              {/* Caption overlay */}
+              <div style={{
+                position: 'absolute', bottom: 0, left: 0, right: 0,
+                background: 'linear-gradient(to top, rgba(0,0,0,0.68), transparent)',
+                padding: '24px 12px 10px',
+              }}>
+                <p style={{ fontSize: 11.5, fontWeight: 600, color: '#fff', margin: 0, lineHeight: 1.4 }}>{photo.caption}</p>
+              </div>
+              {/* Zoom hint */}
+              <div style={{
+                position: 'absolute', top: 8, right: 8,
+                width: 26, height: 26, borderRadius: '50%',
+                background: 'rgba(0,0,0,0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <span className="material-symbols-outlined" style={{ fontSize: 14, color: '#fff' }}>zoom_in</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Source note */}
+        <div style={{ marginTop: 14, display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', background: '#F8F9FA', borderRadius: 8, border: '1px solid #DADCE0' }}>
+          <span className="material-symbols-outlined" style={{ fontSize: 14, color: '#1A73E8', fontVariationSettings: "'FILL' 1" }}>location_on</span>
+          <p style={{ fontSize: 11.5, color: '#5F6368', margin: 0 }}>
+            <strong style={{ color: '#202124' }}>Sumber Data Primer:</strong> Citra rontgen thorax diperoleh langsung dari Unit Radiologi RSJ Prof. Dr. M. Ildrem (RSJ Tampan) Riau atas izin resmi pihak rumah sakit.
+          </p>
+        </div>
+      </div>
+
+      {/* Lightbox */}
+      {lightbox && (
+        <Lightbox src={lightbox} alt="Dokumentasi Pengumpulan Data" onClose={() => setLightbox(null)} />
+      )}
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════
+   MAIN EXPORT
+   ════════════════════════════════════════════ */
 export default function SistemArsitektur() {
   return (
     <div style={{ fontFamily: "'Inter', system-ui, sans-serif", display: 'flex', flexDirection: 'column', gap: 20 }}>
@@ -311,7 +747,6 @@ export default function SistemArsitektur() {
 
         <SectionCard icon="integration_instructions" iconColor="#1E8E3E" iconBg="#E6F4EA" title="Integrasi Backend &amp; Frontend">
           <div style={{ paddingTop: 14, display: 'flex', flexDirection: 'column', gap: 14 }}>
-
             <div style={{ border: '1px solid #81C995', borderRadius: 10, overflow: 'hidden' }}>
               <div style={{ background: '#1E8E3E', padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 6 }}>
                 <span className="material-symbols-outlined" style={{ fontSize: 14, color: '#fff', fontVariationSettings: "'FILL' 1" }}>terminal</span>
@@ -331,7 +766,6 @@ export default function SistemArsitektur() {
                 </p>
               </div>
             </div>
-
             <div style={{ border: '1px solid #C4B5FD', borderRadius: 10, overflow: 'hidden' }}>
               <div style={{ background: '#7C3AED', padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 6 }}>
                 <span className="material-symbols-outlined" style={{ fontSize: 14, color: '#fff', fontVariationSettings: "'FILL' 1" }}>web</span>
@@ -348,7 +782,6 @@ export default function SistemArsitektur() {
                 </p>
               </div>
             </div>
-
             <div style={{ background: '#F8F9FA', borderRadius: 8, padding: '10px 12px', border: '1px solid #DADCE0' }}>
               <p style={{ fontSize: 10, fontWeight: 700, color: '#80868B', textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 8px' }}>Alur End-to-End</p>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center' }}>
@@ -371,14 +804,19 @@ export default function SistemArsitektur() {
                 ))}
               </div>
             </div>
-
           </div>
         </SectionCard>
 
       </div>
 
-      {/* Flowchart Upload */}
-      <FlowchartUpload />
+      {/* Flowchart Metodologi */}
+      <FlowchartMetodologi />
+
+      {/* Contoh Dataset */}
+      <ContohDataset />
+
+      {/* Galeri Dokumentasi */}
+      <DocumentasiGaleri />
 
     </div>
   );
