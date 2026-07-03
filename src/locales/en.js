@@ -327,6 +327,26 @@ const en = {
   bio_skills:     'Technical Competencies',
   bio_category:   'Practicum Category',
   bio_course:     'Data Mining — Cardiomegaly Group',
+
+  // ──────────────────────────────────────────
+  // DATA TRAINING & TESTING SECTION
+  // ──────────────────────────────────────────
+  dt_label:        'Dataset Visualization',
+  dt_title:        'Data Training & Data Testing',
+  dt_subtitle:     'Chest X-Ray image dataset from ODGJ patients at RSJ Tampan Riau used for CNN model training and testing',
+  dt_label_badge:  'Label',
+
+  dt_normal_title: 'Normal',
+  dt_normal_c1:    'Heart size within normal limits (CTR ≤ 50%)',
+  dt_normal_c2:    'No cardiac silhouette enlargement detected',
+  dt_normal_c3:    'No cardiology intervention required',
+  dt_normal_c4:    'Continue ODGJ therapy as usual',
+
+  dt_cardio_title: 'Cardiomegaly',
+  dt_cardio_c1:    'Heart size exceeds normal limits (CTR > 50%)',
+  dt_cardio_c2:    'Cardiac shadow silhouette enlargement detected',
+  dt_cardio_c3:    'High cardiovascular risk from antipsychotics',
+  dt_cardio_c4:    'Requires immediate cardiology referral',
 };
 
 export default en;

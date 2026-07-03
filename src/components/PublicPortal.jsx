@@ -3,6 +3,8 @@ import KarakteristikData from './KarakteristikData';
 import SistemArsitektur from './SistemArsitektur';
 import BiodataTim from './BiodataTim';
 import logoRsj from '../assets/logo-vertikal-rsj.png';
+import imgNormal from '../assets/Dataset Normal & Kardiomegalitas/Normal.JPG';
+import imgCardio from '../assets/Dataset Normal & Kardiomegalitas/Kardiomegalitas.JPG';
 import { useTranslation } from '../lib/TranslationContext';
 import { LanguageSwitcherInline } from './LanguageSwitcher';
 
@@ -397,7 +399,7 @@ export default function PublicPortal({ onEnterAdmin }) {
               boxShadow: '0 1px 6px rgba(60,64,67,0.06)',
             }}>
               {[
-                { value: '1.284+',    label: t('pp_stat_total'), bg: '#FFFFFF' },
+                { value: '150+',    label: t('pp_stat_total'), bg: '#FFFFFF' },
                 { value: '86.5%',     label: t('pp_stat_acc2'),  bg: '#E8F0FE', highlight: true },
                 { value: '2 Kelas',   label: t('pp_stat_class'), bg: '#FFFFFF' },
                 { value: '< 0.5 dtk', label: t('pp_stat_speed'), bg: '#FFFFFF' },
@@ -440,6 +442,228 @@ export default function PublicPortal({ onEnterAdmin }) {
               </Reveal>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ══════ DATA TRAINING & TESTING ══════ */}
+      <section id="dataset" style={{ background: '#FFFFFF', padding: '100px 28px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <Reveal>
+            <div style={{ textAlign: 'center', marginBottom: 56 }}>
+              <span style={{
+                display: 'inline-block', padding: '5px 14px', borderRadius: 9999,
+                background: '#E8F0FE', border: '1px solid #AECBFA',
+                fontSize: 11, fontWeight: 700, color: '#1A73E8',
+                textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 16,
+              }}>
+                {t('dt_label')}
+              </span>
+              <h2 style={{
+                fontFamily: "'Hanken Grotesk', system-ui", fontWeight: 800,
+                fontSize: 'clamp(26px,4vw,38px)', color: '#202124',
+                letterSpacing: '-0.025em', lineHeight: 1.18, margin: '0 0 8px',
+              }}>
+                <span style={{ color: '#1A73E8' }}>Data Training</span>
+                {' & Data Testing'}
+              </h2>
+              <p style={{
+                display: 'inline-block',
+                fontSize: 13, fontWeight: 600, color: '#EA4335',
+                textTransform: 'uppercase', letterSpacing: '0.18em',
+                marginBottom: 16,
+              }}>
+                {t('dt_label_badge')}
+              </p>
+              <p style={{ fontSize: 16, color: '#5F6368', maxWidth: 600, margin: '0 auto', lineHeight: 1.7 }}>
+                {t('dt_subtitle')}
+              </p>
+            </div>
+          </Reveal>
+
+          {/* Cards Grid */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: 28,
+            position: 'relative',
+          }}>
+            {[
+              {
+                title: t('dt_normal_title'),
+                img: imgNormal,
+                altText: 'Citra Rontgen Thorax Normal',
+                characteristics: [
+                  t('dt_normal_c1'),
+                  t('dt_normal_c2'),
+                  t('dt_normal_c3'),
+                  t('dt_normal_c4'),
+                ],
+                accent: '#1E8E3E',
+                accentBg: '#E6F4EA',
+                accentLight: 'rgba(30,142,62,0.08)',
+                borderTop: 'linear-gradient(90deg, #1E8E3E, #34A853)',
+                labelBg: '#E6F4EA',
+                labelColor: '#1E8E3E',
+                delay: 0,
+              },
+              {
+                title: t('dt_cardio_title'),
+                img: imgCardio,
+                altText: 'Citra Rontgen Thorax Kardiomegalitas',
+                characteristics: [
+                  t('dt_cardio_c1'),
+                  t('dt_cardio_c2'),
+                  t('dt_cardio_c3'),
+                  t('dt_cardio_c4'),
+                ],
+                accent: '#D93025',
+                accentBg: '#FCE8E6',
+                accentLight: 'rgba(217,48,37,0.06)',
+                borderTop: 'linear-gradient(90deg, #D93025, #EA4335)',
+                labelBg: '#FCE8E6',
+                labelColor: '#D93025',
+                delay: 120,
+              },
+            ].map((card, idx) => (
+              <Reveal key={card.title} delay={card.delay}>
+                <div
+                  className="pp-hover-lift"
+                  style={{
+                    background: '#FFFFFF',
+                    border: '1px solid #DADCE0',
+                    borderRadius: 20,
+                    overflow: 'hidden',
+                    boxShadow: '0 2px 12px rgba(60,64,67,0.08)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    position: 'relative',
+                  }}
+                >
+                  {/* Top color bar */}
+                  <div style={{
+                    height: 4,
+                    background: card.borderTop,
+                    borderRadius: '20px 20px 0 0',
+                  }} />
+
+                  {/* Card header with title */}
+                  <div style={{
+                    padding: '20px 24px 12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}>
+                    <h3 style={{
+                      fontFamily: "'Hanken Grotesk', system-ui",
+                      fontWeight: 800,
+                      fontSize: 20,
+                      color: '#202124',
+                      margin: 0,
+                    }}>
+                      {card.title}
+                    </h3>
+                    <span style={{
+                      padding: '4px 12px',
+                      borderRadius: 9999,
+                      background: card.labelBg,
+                      color: card.labelColor,
+                      fontSize: 11,
+                      fontWeight: 700,
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.08em',
+                    }}>
+                      {t('dt_label_badge')} {idx}
+                    </span>
+                  </div>
+
+                  {/* X-Ray Image */}
+                  <div style={{
+                    margin: '0 24px',
+                    borderRadius: 14,
+                    overflow: 'hidden',
+                    background: '#F8F9FA',
+                    border: '1px solid #E8EAED',
+                    height: 260,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    position: 'relative',
+                  }}>
+                    {/* Decorative dot pattern */}
+                    <div style={{
+                      position: 'absolute',
+                      top: 8, left: 8,
+                      width: 60, height: 60,
+                      backgroundImage: `radial-gradient(circle, ${card.accent}22 1.5px, transparent 1.5px)`,
+                      backgroundSize: '12px 12px',
+                      borderRadius: 8,
+                      opacity: 0.7,
+                    }} />
+                    <img
+                      src={card.img}
+                      alt={card.altText}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        display: 'block',
+                        filter: 'grayscale(10%) contrast(1.05)',
+                        transition: 'transform 0.4s ease',
+                      }}
+                      onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.04)'; }}
+                      onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; }}
+                    />
+                  </div>
+
+                  {/* Characteristics */}
+                  <div style={{ padding: '20px 24px 24px' }}>
+                    <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                      {card.characteristics.map((item, i) => (
+                        <li key={i} style={{
+                          display: 'flex',
+                          alignItems: 'flex-start',
+                          gap: 10,
+                          fontSize: 13,
+                          color: '#5F6368',
+                          lineHeight: 1.6,
+                        }}>
+                          <span style={{
+                            flexShrink: 0,
+                            marginTop: 2,
+                            width: 6, height: 6,
+                            borderRadius: '50%',
+                            background: card.accent,
+                            display: 'inline-block',
+                          }} />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+
+          {/* Bottom note */}
+          <Reveal delay={200}>
+            <div style={{
+              marginTop: 40,
+              padding: '16px 24px',
+              background: '#F8F9FA',
+              borderRadius: 12,
+              border: '1px solid #E8EAED',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 12,
+              flexWrap: 'wrap',
+            }}>
+              <span className="material-symbols-outlined" style={{ fontSize: 18, color: '#1A73E8', fontVariationSettings: "'FILL' 1" }}>info</span>
+              <p style={{ margin: 0, fontSize: 12, color: '#5F6368', lineHeight: 1.6 }}>
+                <strong style={{ color: '#202124' }}>Sumber Dataset:</strong> Citra Rontgen Thorax pasien ODGJ RSJ Tampan Riau (Panam) · Total: <strong style={{ color: '#1A73E8' }}>150+ sampel</strong> · Preprocessing: resize, normalisasi piksel, ekspansi dimensi · Format: <strong style={{ color: '#202124' }}>.JPG/PNG → 256×256 px</strong>
+              </p>
+            </div>
+          </Reveal>
         </div>
       </section>
 

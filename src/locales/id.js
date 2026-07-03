@@ -327,6 +327,26 @@ const id = {
   bio_skills:     'Kompetensi Teknis',
   bio_category:   'Kategori Praktikum',
   bio_course:     'Data Mining — Kelompok Kardiomegali',
+
+  // ──────────────────────────────────────────
+  // DATA TRAINING & TESTING SECTION
+  // ──────────────────────────────────────────
+  dt_label:        'Visualisasi Dataset',
+  dt_title:        'Data Training & Data Testing',
+  dt_subtitle:     'Dataset citra Rontgen Thorax dari pasien ODGJ RSJ Tampan Riau yang digunakan untuk pelatihan dan pengujian model CNN',
+  dt_label_badge:  'Label',
+
+  dt_normal_title: 'Normal',
+  dt_normal_c1:    'Ukuran jantung dalam batas normal (CTR ≤ 50%)',
+  dt_normal_c2:    'Tidak terdapat pembesaran siluet jantung',
+  dt_normal_c3:    'Tidak memerlukan tindakan kardiologi',
+  dt_normal_c4:    'Lanjutkan terapi ODGJ seperti biasa',
+
+  dt_cardio_title: 'Kardiomegalitas',
+  dt_cardio_c1:    'Ukuran jantung melebihi batas normal (CTR > 50%)',
+  dt_cardio_c2:    'Terindikasi pembesaran siluet bayangan jantung',
+  dt_cardio_c3:    'Risiko kardiovaskular tinggi dari antipsikotik',
+  dt_cardio_c4:    'Memerlukan rujukan kardiologi segera',
 };
 
 export default id;
