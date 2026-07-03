@@ -11,7 +11,7 @@ const PAGE_META = {
   biodata:    { icon: 'group',         desc: 'Profil kelompok peneliti',                      color: '#5F6368', bg: '#F1F3F4' },
 };
 
-export default function Header({ title, currentTab }) {
+export default function Header({ title, currentTab, onToggleMenu }) {
   const { t } = useTranslation();
   const [showNotifications, setShowNotifications] = useState(false);
   const meta = PAGE_META[currentTab] || { icon: 'menu', desc: '', color: '#5F6368', bg: '#F1F3F4' };
@@ -40,12 +40,12 @@ export default function Header({ title, currentTab }) {
         {/* Left — Title & breadcrumb */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           {/* Mobile menu placeholder */}
-          <span className="md:hidden material-symbols-outlined" style={{ fontSize: 20, color: '#80868B', cursor: 'pointer' }}>menu</span>
+          <span onClick={onToggleMenu} className="md:hidden material-symbols-outlined" style={{ fontSize: 20, color: '#80868B', cursor: 'pointer' }}>menu</span>
 
           {/* Icon chip */}
-          <div style={{
+          <div className="hidden md:flex" style={{
             width: 34, height: 34, borderRadius: 8,
-            background: meta.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+            background: meta.bg, alignItems: 'center', justifyContent: 'center', flexShrink: 0,
           }}>
             <span
               className="material-symbols-outlined"
@@ -77,7 +77,7 @@ export default function Header({ title, currentTab }) {
           <div
             className="hidden sm:flex"
             style={{
-              display: 'flex', alignItems: 'center', gap: 6,
+              alignItems: 'center', gap: 6,
               padding: '5px 10px', borderRadius: 8,
               background: '#F8F9FA', border: '1px solid #DADCE0',
             }}
@@ -120,8 +120,8 @@ export default function Header({ title, currentTab }) {
           {/* Notification Dropdown */}
           {showNotifications && (
             <div style={{
-              position: 'absolute', right: 40, top: 44,
-              width: 320, borderRadius: 14,
+              position: 'absolute', right: 0, top: 44,
+              width: 290, maxWidth: 'calc(100vw - 32px)', borderRadius: 14,
               background: '#FFFFFF', border: '1px solid #DADCE0',
               boxShadow: '0 8px 32px rgba(60,64,67,0.14)',
               zIndex: 60, overflow: 'hidden',

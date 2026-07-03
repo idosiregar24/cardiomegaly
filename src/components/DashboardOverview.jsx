@@ -201,6 +201,7 @@ export default function DashboardOverview({ onViewDetail, setCurrentTab }) {
         <article className="xl:col-span-7" style={{
           borderRadius: 12, border: '1px solid #DADCE0', background: '#FFFFFF',
           padding: 20, boxShadow: '0 1px 4px rgba(60,64,67,0.06)',
+          minWidth: 0, overflow: 'hidden',
         }}>
           <div style={{ marginBottom: 16 }}>
             <h3 style={{ fontSize: 15, fontWeight: 700, color: '#202124', margin: '0 0 4px', fontFamily: "'Hanken Grotesk', system-ui" }}>
@@ -231,6 +232,7 @@ export default function DashboardOverview({ onViewDetail, setCurrentTab }) {
         <article className="xl:col-span-5" style={{
           borderRadius: 12, border: '1px solid #DADCE0', background: '#FFFFFF',
           padding: 20, boxShadow: '0 1px 4px rgba(60,64,67,0.06)',
+          minWidth: 0, overflow: 'hidden',
         }}>
           <h3 style={{ fontSize: 15, fontWeight: 700, color: '#202124', margin: '0 0 4px', fontFamily: "'Hanken Grotesk', system-ui" }}>
             {t('db_chart_dist')}
@@ -267,6 +269,7 @@ export default function DashboardOverview({ onViewDetail, setCurrentTab }) {
         <article className="xl:col-span-5" style={{
           borderRadius: 12, border: '1px solid #DADCE0', background: '#FFFFFF',
           padding: 20, boxShadow: '0 1px 4px rgba(60,64,67,0.06)',
+          minWidth: 0, overflow: 'hidden',
         }}>
           <h3 style={{ fontSize: 15, fontWeight: 700, color: '#202124', margin: '0 0 4px', fontFamily: "'Hanken Grotesk', system-ui" }}>
             {t('db_chart_valid')}
@@ -290,6 +293,7 @@ export default function DashboardOverview({ onViewDetail, setCurrentTab }) {
         <article className="xl:col-span-7" style={{
           borderRadius: 12, border: '1px solid #DADCE0', background: '#FFFFFF',
           overflow: 'hidden', boxShadow: '0 1px 4px rgba(60,64,67,0.06)',
+          minWidth: 0,
         }}>
           <div style={{
             display: 'flex', justifyContent: 'space-between', alignItems: 'center',

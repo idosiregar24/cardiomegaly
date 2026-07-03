@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import DashboardOverview from './components/DashboardOverview';
-import FlowchartSistem from './components/FlowchartSistem';
+import SistemArsitektur from './components/SistemArsitektur';
 import HistoryAnalytics from './components/HistoryAnalytics';
 import Settings from './components/Settings';
 import KarakteristikData from './components/KarakteristikData';
@@ -18,6 +18,7 @@ function AppInner() {
   const [viewMode,    setViewMode]    = useState('portal'); // 'portal' | 'admin'
   const [currentTab,  setCurrentTab]  = useState('dashboard');
   const [activeResult, setActiveResult] = useState(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Menentukan judul header halaman aktif
   const getHeaderTitle = () => {
@@ -48,21 +49,28 @@ function AppInner() {
     );
   }
 
+  const handleSelectTab = (tabId) => {
+    setCurrentTab(tabId);
+    setMobileMenuOpen(false); // Close drawer when clicking a tab
+  };
+
   return (
-    <div className="min-h-screen flex flex-col md:flex-row" style={{ background: '#f4f7fb' }}>
+    <div className="min-h-screen flex flex-col md:flex-row max-w-full overflow-x-hidden" style={{ background: '#f4f7fb' }}>
 
       {/* Sidebar Navigasi (Samping untuk Desktop, Bawah untuk Mobile) */}
       <Sidebar
         currentTab={currentTab}
-        setCurrentTab={setCurrentTab}
-        onExit={() => setViewMode('portal')}
+        setCurrentTab={handleSelectTab}
+        onExit={() => { setViewMode('portal'); setMobileMenuOpen(false); }}
+        mobileMenuOpen={mobileMenuOpen}
+        setMobileMenuOpen={setMobileMenuOpen}
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 md:ml-64 pb-24 md:pb-8 flex flex-col min-h-screen">
+      <main className="flex-1 md:ml-64 pb-24 md:pb-8 flex flex-col min-h-screen max-w-full overflow-x-hidden">
 
         {/* Header Atas — pass currentTab agar ikon & deskripsi ikut berubah */}
-        <Header title={getHeaderTitle()} currentTab={currentTab} />
+        <Header title={getHeaderTitle()} currentTab={currentTab} onToggleMenu={() => setMobileMenuOpen(v => !v)} />
 
         {/* Content Canvas */}
         <div className="p-6 max-w-7xl w-full mx-auto space-y-8 flex-1">
@@ -72,9 +80,9 @@ function AppInner() {
             <>
               <DashboardOverview
                 onViewDetail={handleViewDetail}
-                setCurrentTab={setCurrentTab}
+                setCurrentTab={handleSelectTab}
               />
-              <FlowchartSistem />
+              <SistemArsitektur />
             </>
           )}
 

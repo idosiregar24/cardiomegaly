@@ -3,7 +3,7 @@ import logoRsj from '../assets/logo-vertikal-rsj.png';
 import { useTranslation } from '../lib/TranslationContext';
 import { LanguageSwitcherInline } from './LanguageSwitcher';
 
-export default function Sidebar({ currentTab, setCurrentTab, onExit }) {
+export default function Sidebar({ currentTab, setCurrentTab, onExit, mobileMenuOpen, setMobileMenuOpen }) {
   const { t } = useTranslation();
   const navItems = [
     { id: 'dashboard', label: t('nav_dashboard'), icon: 'dashboard',     desc: t('nav_dashboard_desc') },
@@ -14,8 +14,21 @@ export default function Sidebar({ currentTab, setCurrentTab, onExit }) {
 
   return (
     <>
-      {/* ─── Desktop Sidebar ─── */}
-      <aside className="hidden md:flex h-screen w-64 fixed left-0 top-0 flex-col z-50 bg-white border-r border-[#DADCE0]">
+      {/* Backdrop for Mobile Drawer */}
+      {mobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 z-40 md:hidden animate-fade-in"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* ─── Sidebar (Desktop & Mobile Drawer) ─── */}
+      <aside className={`
+        fixed left-0 top-0 h-screen w-64 flex flex-col z-50 bg-white border-r border-[#DADCE0]
+        transition-transform duration-300 ease-in-out
+        ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
+        md:translate-x-0
+      `}>
 
         {/* Logo */}
         <div style={{ padding: '20px 20px 16px', borderBottom: '1px solid #F1F3F4' }}>

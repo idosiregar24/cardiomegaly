@@ -192,7 +192,7 @@ export default function PublicPortal({ onEnterAdmin }) {
           </button>
 
           {/* Desktop Nav */}
-          <nav style={{ display: 'flex', alignItems: 'center', gap: 28 }} className="hidden md:flex">
+          <nav style={{ alignItems: 'center', gap: 28 }} className="hidden md:flex">
             {navLinks.map(([id, label]) => (
               <button key={id} onClick={() => scrollTo(id)} className="pp-nav-link">{label}</button>
             ))}
@@ -203,7 +203,7 @@ export default function PublicPortal({ onEnterAdmin }) {
             <button
               onClick={onEnterAdmin}
               style={{
-                display: 'flex', alignItems: 'center', gap: 6,
+                alignItems: 'center', gap: 6,
                 background: '#1A73E8', color: '#FFFFFF',
                 border: 'none', borderRadius: 8,
                 padding: '8px 16px', cursor: 'pointer',
@@ -238,16 +238,26 @@ export default function PublicPortal({ onEnterAdmin }) {
 
         {/* Mobile Nav Dropdown */}
         {menuOpen && (
-          <div style={{ borderTop: '1px solid #DADCE0', background: '#FFFFFF', padding: '12px 20px 16px' }}>
+          <div style={{
+            borderTop: '1px solid #DADCE0', background: '#FFFFFF', padding: '12px 20px 16px',
+            animation: 'slideDown 0.2s ease',
+          }}>
+            <style>{`@keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }`}</style>
             {navLinks.map(([id, label]) => (
               <button key={id} onClick={() => scrollTo(id)} style={{
                 display: 'block', width: '100%', textAlign: 'left', background: 'none', border: 'none',
-                cursor: 'pointer', padding: '10px 0', fontSize: 15, fontWeight: 500, color: '#202124',
+                cursor: 'pointer', padding: '12px 0', fontSize: 15, fontWeight: 500, color: '#202124',
                 borderBottom: '1px solid #F1F3F4', fontFamily: "'Inter', system-ui",
               }}>{label}</button>
             ))}
-            <button onClick={onEnterAdmin} style={{ display: 'block', marginTop: 12, background: 'none', border: 'none', cursor: 'pointer', fontSize: 15, fontWeight: 700, color: '#1A73E8', fontFamily: "'Inter', system-ui" }}>
-              {t('pp_admin')} →
+            <button onClick={onEnterAdmin} style={{
+              display: 'flex', alignItems: 'center', gap: 8, marginTop: 14,
+              background: '#1A73E8', color: '#fff', border: 'none', borderRadius: 8,
+              padding: '10px 16px', cursor: 'pointer', fontSize: 14, fontWeight: 600,
+              fontFamily: "'Inter', system-ui", width: '100%', justifyContent: 'center',
+            }}>
+              <span className="material-symbols-outlined" style={{ fontSize: 16, fontVariationSettings: "'FILL' 1" }}>admin_panel_settings</span>
+              {t('pp_admin')}
             </button>
             <div style={{ marginTop: 12 }}>
               <LanguageSwitcherInline />
@@ -361,75 +371,6 @@ export default function PublicPortal({ onEnterAdmin }) {
                   </div>
                 </div>
               ))}
-            </div>
-          </Reveal>
-
-          {/* Hero X-Ray mockup */}
-          <Reveal delay={350} y={30}>
-            <div style={{ marginTop: 64, position: 'relative', display: 'inline-block' }}>
-              <div style={{
-                width: 280, height: 280, borderRadius: 20,
-                background: 'linear-gradient(145deg, #1a1a1a, #0d0d0d)',
-                border: '1px solid #DADCE0',
-                boxShadow: '0 20px 60px rgba(0,0,0,0.15)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                position: 'relative', overflow: 'hidden', margin: '0 auto',
-              }}>
-                {/* Mock X-Ray ribs */}
-                <svg width="200" height="200" viewBox="0 0 200 200" style={{ opacity: 0.7 }}>
-                  <ellipse cx="100" cy="100" rx="55" ry="70" fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" />
-                  <ellipse cx="100" cy="100" rx="35" ry="48" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="1" />
-                  <path d="M60 60 Q50 100 60 140" fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="3" />
-                  <path d="M140 60 Q150 100 140 140" fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="3" />
-                  <path d="M65 75 Q50 80 40 90" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="2" />
-                  <path d="M135 75 Q150 80 160 90" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="2" />
-                  <path d="M65 95 Q50 100 38 108" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="2" />
-                  <path d="M135 95 Q150 100 162 108" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="2" />
-                  <path d="M67 115 Q52 120 42 128" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="2" />
-                  <path d="M133 115 Q148 120 158 128" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="2" />
-                  {/* Spine */}
-                  <line x1="100" y1="40" x2="100" y2="160" stroke="rgba(255,255,255,0.2)" strokeWidth="3" />
-                </svg>
-                {/* Scanner line */}
-                <div
-                  className="pp-scan-line"
-                  style={{
-                    position: 'absolute', left: 0, right: 0, height: 2,
-                    background: 'linear-gradient(90deg, transparent, #1A73E8, transparent)',
-                    boxShadow: '0 0 12px 2px rgba(26,115,232,0.6)',
-                  }}
-                />
-              </div>
-
-              {/* Floating result badge */}
-              <div
-                className="pp-float"
-                style={{
-                  position: 'absolute', top: -16, right: -20,
-                  background: '#FFFFFF', border: '1px solid #DADCE0',
-                  borderRadius: 12, padding: '10px 14px',
-                  boxShadow: '0 4px 16px rgba(60,64,67,0.12)',
-                  display: 'flex', alignItems: 'center', gap: 8,
-                }}
-              >
-                <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#1E8E3E' }} />
-                <span style={{ fontSize: 12, fontWeight: 700, color: '#202124' }}>Normal</span>
-                <span style={{ fontSize: 12, fontWeight: 600, color: '#1E8E3E' }}>98.1%</span>
-              </div>
-
-              {/* Floating CTR badge */}
-              <div
-                style={{
-                  position: 'absolute', bottom: -12, left: -20,
-                  background: '#E8F0FE', border: '1px solid #AECBFA',
-                  borderRadius: 12, padding: '10px 14px',
-                  boxShadow: '0 4px 16px rgba(60,64,67,0.1)',
-                  display: 'flex', alignItems: 'center', gap: 8,
-                }}
-              >
-                <span className="material-symbols-outlined" style={{ fontSize: 14, color: '#1A73E8', fontVariationSettings: "'FILL' 1" }}>analytics</span>
-                <span style={{ fontSize: 12, fontWeight: 700, color: '#1558B0' }}>CTR: 0.46</span>
-              </div>
             </div>
           </Reveal>
         </div>
